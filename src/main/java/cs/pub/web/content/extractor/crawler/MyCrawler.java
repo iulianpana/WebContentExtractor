@@ -21,7 +21,7 @@ import edu.uci.ics.crawler4j.url.WebURL;
 
 
 /**
- * Created by tom on 4/9/2017.
+ * 
  */
 @Service
 public class MyCrawler extends WebCrawler {
