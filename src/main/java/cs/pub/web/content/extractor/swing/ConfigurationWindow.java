@@ -5,16 +5,26 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 import org.springframework.stereotype.Service;
 
 import cs.pub.web.content.extractor.crawler.MyCrawlerController;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
 
 @Service
 public class ConfigurationWindow extends JFrame {
@@ -57,15 +67,38 @@ public class ConfigurationWindow extends JFrame {
 				}
 			}
 		});
+	    File fileRoot = new File("dosarImagini");
+
+	    DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileRoot);
+	    DefaultTreeModel model = new DefaultTreeModel(root);
+	    JTree tree = new JTree();
+		tree.setModel(model);
+
+	    File[] subItems = fileRoot.listFiles();
+	    for (File file : subItems) {
+	      root.add(new DefaultMutableTreeNode(file));
+	    }
+	    for (int i = 0; i < root.getChildCount(); i++) {
+	        tree.expandRow(i);
+	    }
+	    pack();
+		
+		JScrollPane scrollPane = new JScrollPane(tree);
+		
 		GroupLayout gl = new GroupLayout(pane);
 		gl.setHorizontalGroup(
 			gl.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl.createSequentialGroup()
-					.addGap(51)
-					.addComponent(btnNewButton)
-					.addGap(41)
-					.addComponent(btnQuit)
-					.addContainerGap(1664, Short.MAX_VALUE))
+					.addGroup(gl.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl.createSequentialGroup()
+							.addGap(51)
+							.addComponent(btnNewButton)
+							.addGap(41)
+							.addComponent(btnQuit))
+						.addGroup(gl.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 1489, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(317, Short.MAX_VALUE))
 		);
 		gl.setVerticalGroup(
 			gl.createParallelGroup(Alignment.LEADING)
@@ -74,10 +107,14 @@ public class ConfigurationWindow extends JFrame {
 					.addGroup(gl.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnNewButton)
 						.addComponent(btnQuit))
-					.addContainerGap(914, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED, 420, Short.MAX_VALUE)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
 		);
+		
+		
 		pane.setLayout(gl);
-
+		
 		gl.setAutoCreateContainerGaps(true);
 	}
 
@@ -88,5 +125,4 @@ public class ConfigurationWindow extends JFrame {
 	public void setRunner(MyCrawlerController runner) {
 		this.runner = runner;
 	}
-
 }
