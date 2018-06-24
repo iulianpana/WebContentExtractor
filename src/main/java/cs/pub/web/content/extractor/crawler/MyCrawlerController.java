@@ -16,49 +16,104 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 public class MyCrawlerController implements CommandLineRunner {
 
 	private CrawlController controller;
-	
+
+	private String[] crawlDomains = {""};
+	private String crawlStorageFolder = "outputFolder";
+	private int numberOfCrawlers = 10;
+
 	public MyCrawlerController() {
-		 String[] crawlDomains = {"https://pixabay.com/en/"};
-	        String crawlStorageFolder = "./dosarImagini";
-	        //int numberOfCrawlers = 10;
 
-	        CrawlConfig config = new CrawlConfig();
-	        config.setCrawlStorageFolder(crawlStorageFolder);
-	        config.setIncludeBinaryContentInCrawling(true);
-	        config.setUserAgentString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
-	        config.setProxyHost("kirk.crm.orange.intra");
-	        config.setProxyPort(3128);
-
-	        PageFetcher fetcher = new PageFetcher(config);
-	        RobotstxtConfig robotsConfig = new RobotstxtConfig();
-	        robotsConfig.setEnabled(false);
-	        RobotstxtServer robotsSvr = new RobotstxtServer(robotsConfig, fetcher);
-
-	        try {
-				controller = new CrawlController(config, fetcher, robotsSvr);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	        for (String domain : crawlDomains) {
-	            controller.addSeed(domain);
-	        }
-
-	        MyCrawler.configure(crawlDomains, crawlStorageFolder);
 	}
-	
-    public void run() {
-    	controller.startNonBlocking(MyCrawler.class, 10);
-    }
-    
+
+	public void run() {
+		CrawlConfig config = new CrawlConfig();
+		config.setCrawlStorageFolder(crawlStorageFolder);
+		
+		config.setIncludeBinaryContentInCrawling(true);
+		config.setUserAgentString(
+				"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
+		// config.setProxyHost("kirk.crm.orange.intra");
+		// config.setProxyPort(3128);
+
+		PageFetcher fetcher = new PageFetcher(config);
+		RobotstxtConfig robotsConfig = new RobotstxtConfig();
+		robotsConfig.setEnabled(false);
+		RobotstxtServer robotsSvr = new RobotstxtServer(robotsConfig, fetcher);
+
+		try {
+			controller = new CrawlController(config, fetcher, robotsSvr);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (String domain : getCrawlDomains()) {
+			controller.addSeed(domain);
+		}
+
+		MyCrawler.configure(getCrawlDomains(), getCrawlStorageFolder());
+
+		controller.startNonBlocking(MyCrawler.class, 10);
+	}
+
 	public void stop() {
 		controller.shutdown();
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		// TODO Auto-generated method stub
-		
+
 	}
-    
+
+	public String[] getCrawlDomains() {
+		return crawlDomains;
+	}
+
+	public void setCrawlDomains(String[] crawlDomains) {
+		this.crawlDomains = crawlDomains;
+	}
+
+	public String getCrawlStorageFolder() {
+		return crawlStorageFolder;
+	}
+
+	public void setCrawlStorageFolder(String crawlStorageFolder) {
+		this.crawlStorageFolder = crawlStorageFolder;
+	}
+
+	public int getNumberOfCrawlers() {
+		return numberOfCrawlers;
+	}
+
+	public void setNumberOfCrawlers(int numberOfCrawlers) {
+		this.numberOfCrawlers = numberOfCrawlers;
+	}
+
+	public static class MyCrawlBuilder {
+
+		private static MyCrawlerController crawler;
+
+		public static void createCrawler() {
+			crawler = new MyCrawlerController();
+		}
+
+		public MyCrawlBuilder withDomains(String[] crawlDomains) {
+			crawler.setCrawlDomains(crawlDomains);
+			return this;
+		}
+		
+		public MyCrawlBuilder withNumberOfCrawlers(int numberOfCrawlers){
+			crawler.setNumberOfCrawlers(numberOfCrawlers);
+			return this;
+		}
+		
+		public MyCrawlBuilder withStorageFolder(String crawlStorageFolder){
+			crawler.setCrawlStorageFolder(crawlStorageFolder);
+			return this;
+		}
+		
+		public MyCrawlerController build(){
+			return crawler;
+		}
+	}
+
 }
