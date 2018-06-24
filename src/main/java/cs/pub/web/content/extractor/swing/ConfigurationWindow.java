@@ -4,9 +4,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -16,28 +13,30 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JTree;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 import org.springframework.stereotype.Service;
 
 import cs.pub.web.content.extractor.crawler.MyCrawlerController;
-import cs.pub.web.content.extractor.utils.JsonUtils;
+import cs.pub.web.content.extractor.swing.listeners.CrawlListener;
+import cs.pub.web.content.extractor.swing.listeners.DomainsListener;
+import cs.pub.web.content.extractor.swing.listeners.QuitListener;
+import cs.pub.web.content.extractor.swing.listeners.StorageListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 @Service
 public class ConfigurationWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
-	private MyCrawlerController runner;
-	private File fileRoot = new File("outputFolder");
+	private MyCrawlerController runner = new MyCrawlerController();
+	
 	private JTextField maxDepthField;
 	private JTextField storageField;
 	private JTextField domainsField;
+	
+	private JScrollPane scrollPane;
 
 	public ConfigurationWindow() {
 		initUI();
@@ -50,7 +49,7 @@ public class ConfigurationWindow extends JFrame {
 		setSize((int)screenSize.getWidth(), (int) screenSize.getHeight() - 40 );
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		setRunner(new MyCrawlerController());
+		setRunner(runner);
 	}
 
 	private void createLayout(JComponent arg) {
@@ -58,71 +57,16 @@ public class ConfigurationWindow extends JFrame {
 		Container pane = getContentPane();
 		
 		JButton btnNewButton = new JButton("Crawl");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(JsonUtils.toJson(runner.getCrawlDomains()));
-				runner.run();
-				
-			}
-		});
+		btnNewButton.addActionListener(new CrawlListener(runner));
 		
 		JButton btnQuit = new JButton("Quit");
-		btnQuit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(null != runner){
-					System.out.println("Stop!");
-					runner.stop();
-				}
-			}
-		});
-
-	    DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileRoot);
-	    DefaultTreeModel model = new DefaultTreeModel(root);
-	    JTree tree = new JTree();
-		tree.setModel(model);
-
-		if (null != fileRoot && null != fileRoot.listFiles()) {
-			File[] subItems = fileRoot.listFiles();
-			for (File file : subItems) {
-				root.add(new DefaultMutableTreeNode(file));
-			}
-			for (int i = 0; i < root.getChildCount(); i++) {
-				tree.expandRow(i);
-			}
-		}
-	    pack();
-		
-		JScrollPane scrollPane = new JScrollPane(tree);
+		btnQuit.addActionListener(new QuitListener(runner));
 		
 		JLabel sitesLabel = new JLabel("Sites(s):");
 		sitesLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
 		domainsField = new JTextField();
-		domainsField.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				String domainsText = domainsField.getText();
-				if (null != domainsText && !domainsText.isEmpty()) {
-					runner.setCrawlDomains(domainsText.split(","));
-					System.out.println(domainsText + " " + JsonUtils.toJson(domainsText.split(",")));
-				}
-				
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
+		domainsField.getDocument().addDocumentListener(new DomainsListener(runner, domainsField));
 		domainsField.setColumns(10);
 		
 		JLabel maxDepthLabel = new JLabel("Maximum depth");
@@ -135,11 +79,20 @@ public class ConfigurationWindow extends JFrame {
 		storageLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
 		storageField = new JTextField();
-		storageField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				fileRoot = new File(storageField.getText());
+		scrollPane = new JScrollPane();
+		scrollPane.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if("r".equals(arg0.getKeyChar())){
+					System.out.println("\nR\n");
+					scrollPane.revalidate();
+					scrollPane.repaint();
+				}
 			}
 		});
+		storageField.getDocument().addDocumentListener(new StorageListener(runner, scrollPane, storageField));
+		scrollPane.setVisible(true);
+		pack();
 		storageField.setColumns(10);
 		
 		GroupLayout gl = new GroupLayout(pane);

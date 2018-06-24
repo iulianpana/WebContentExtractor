@@ -18,7 +18,7 @@ public class MyCrawlerController implements CommandLineRunner {
 	private CrawlController controller;
 
 	private String[] crawlDomains = {""};
-	private String crawlStorageFolder = "outputFolder";
+	private String crawlStorageFolder = "";
 	private int numberOfCrawlers = 10;
 
 	public MyCrawlerController() {
@@ -34,7 +34,7 @@ public class MyCrawlerController implements CommandLineRunner {
 				"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
 		// config.setProxyHost("kirk.crm.orange.intra");
 		// config.setProxyPort(3128);
-
+		config.setPolitenessDelay(1000);
 		PageFetcher fetcher = new PageFetcher(config);
 		RobotstxtConfig robotsConfig = new RobotstxtConfig();
 		robotsConfig.setEnabled(false);
@@ -47,6 +47,7 @@ public class MyCrawlerController implements CommandLineRunner {
 			e.printStackTrace();
 		}
 		for (String domain : getCrawlDomains()) {
+			System.out.println("Added domain : " + domain);
 			controller.addSeed(domain);
 		}
 

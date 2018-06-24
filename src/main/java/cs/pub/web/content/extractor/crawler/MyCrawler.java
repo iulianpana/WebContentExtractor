@@ -62,7 +62,8 @@ public class MyCrawler extends WebCrawler {
     public void visit(Page page) {
 
         String url = page.getWebURL().getURL();
-        System.out.println(url);
+        //System.out.println(url);
+         File urlFile = new File(url + ".json");
 
         // If it's a regular html page.
         // Extracts new links form attribute: srcset(not supported by crawler4j), then sends them back to links pool.
