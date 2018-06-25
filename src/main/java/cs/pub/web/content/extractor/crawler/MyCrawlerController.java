@@ -33,7 +33,7 @@ public class MyCrawlerController implements CommandLineRunner {
 		config.setUserAgentString("Googlebot/2.1 (+http://www.google.com/bot.html)");
 		// config.setProxyHost("kirk.crm.orange.intra");
 		// config.setProxyPort(3128);
-		config.setPolitenessDelay(1000);
+		config.setPolitenessDelay(2000);
 		PageFetcher fetcher = new PageFetcher(config);
 		RobotstxtConfig robotsConfig = new RobotstxtConfig();
 		robotsConfig.setEnabled(true);

@@ -92,47 +92,46 @@ public class ConfigurationWindow extends JFrame {
 				}
 			}
 		});
-		storageField.getDocument().addDocumentListener(new StorageListener(runner, scrollPane, storageField));
+		StorageListener storageListener = new StorageListener(runner, scrollPane, storageField);
+		storageField.getDocument().addDocumentListener(storageListener);
 		scrollPane.setVisible(true);
 		pack();
 		storageField.setColumns(10);
 		
 		JButton refreshButton = new JButton("Refresh");
-		refreshButton.addActionListener(new RefreshListener(new File(runner.getCrawlStorageFolder()), scrollPane));
+		refreshButton.addActionListener(new RefreshListener(new File(runner.getCrawlStorageFolder()), scrollPane, storageListener));
 		
 		GroupLayout gl = new GroupLayout(pane);
 		gl.setHorizontalGroup(
 			gl.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 1489, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl.createSequentialGroup()
-					.addGap(80)
-					.addComponent(btnNewButton)
-					.addGap(104)
-					.addComponent(btnQuit)
-					.addGap(52)
-					.addComponent(refreshButton, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(1928, Short.MAX_VALUE))
-				.addGroup(gl.createSequentialGroup()
-					.addContainerGap()
 					.addGroup(gl.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl.createParallelGroup(Alignment.TRAILING)
-							.addGroup(gl.createSequentialGroup()
-								.addComponent(maxDepthLabel, GroupLayout.PREFERRED_SIZE, 142, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED))
-							.addComponent(sitesLabel, GroupLayout.PREFERRED_SIZE, 142, GroupLayout.PREFERRED_SIZE))
-						.addComponent(storageLabel))
-					.addGap(146)
-					.addGroup(gl.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 1489, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl.createSequentialGroup()
+							.addGap(80)
+							.addComponent(btnNewButton)
+							.addGap(104)
+							.addComponent(btnQuit)
+							.addGap(52)
+							.addComponent(refreshButton, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl.createParallelGroup(Alignment.TRAILING)
+									.addGroup(gl.createSequentialGroup()
+										.addComponent(maxDepthLabel, GroupLayout.PREFERRED_SIZE, 142, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.RELATED))
+									.addComponent(sitesLabel, GroupLayout.PREFERRED_SIZE, 142, GroupLayout.PREFERRED_SIZE))
+								.addComponent(storageLabel))
 							.addComponent(storageLabel)
-							.addGap(662)
-							.addComponent(storageField, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl.createParallelGroup(Alignment.TRAILING)
-							.addComponent(domainsField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
-							.addComponent(maxDepthField, GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)))
-					.addGap(1107))
+							.addGap(405)
+							.addGroup(gl.createParallelGroup(Alignment.TRAILING, false)
+								.addComponent(maxDepthField)
+								.addComponent(domainsField, GroupLayout.DEFAULT_SIZE, 642, Short.MAX_VALUE)
+								.addComponent(storageField, Alignment.LEADING))))
+					.addContainerGap(1506, Short.MAX_VALUE))
 		);
 		gl.setVerticalGroup(
 			gl.createParallelGroup(Alignment.TRAILING)
@@ -147,9 +146,9 @@ public class ConfigurationWindow extends JFrame {
 						.addComponent(maxDepthField, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl.createParallelGroup(Alignment.BASELINE)
-						.addComponent(storageLabel)
+						.addComponent(storageLabel, GroupLayout.PREFERRED_SIZE, 52, GroupLayout.PREFERRED_SIZE)
 						.addComponent(storageField, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 361, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 337, Short.MAX_VALUE)
 					.addGroup(gl.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnNewButton)
 						.addComponent(btnQuit)

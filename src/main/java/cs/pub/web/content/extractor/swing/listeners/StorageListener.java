@@ -38,9 +38,7 @@ public class StorageListener implements DocumentListener {
 		if (null != storageField) {
 			if (null != storageField.getText() && false == storageField.getText().isEmpty()) {
 				fileRoot = new File(storageField.getText());
-			} else {
-				fileRoot = new File("out");
-			}
+			} 
 		}
 		runner.setCrawlStorageFolder(fileRoot.getAbsolutePath());
 		if (null != fileRoot) {
