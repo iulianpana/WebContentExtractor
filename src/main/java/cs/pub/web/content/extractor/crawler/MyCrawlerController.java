@@ -30,16 +30,16 @@ public class MyCrawlerController implements CommandLineRunner {
 		config.setCrawlStorageFolder(crawlStorageFolder);
 		
 		config.setIncludeBinaryContentInCrawling(true);
-		config.setUserAgentString(
-				"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
+		config.setUserAgentString("Googlebot/2.1 (+http://www.google.com/bot.html)");
 		// config.setProxyHost("kirk.crm.orange.intra");
 		// config.setProxyPort(3128);
 		config.setPolitenessDelay(1000);
 		PageFetcher fetcher = new PageFetcher(config);
 		RobotstxtConfig robotsConfig = new RobotstxtConfig();
-		robotsConfig.setEnabled(false);
+		robotsConfig.setEnabled(true);
 		RobotstxtServer robotsSvr = new RobotstxtServer(robotsConfig, fetcher);
-
+		config.setIncludeHttpsPages(true);
+		
 		try {
 			controller = new CrawlController(config, fetcher, robotsSvr);
 		} catch (Exception e) {

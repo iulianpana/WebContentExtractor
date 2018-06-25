@@ -21,9 +21,11 @@ import cs.pub.web.content.extractor.crawler.MyCrawlerController;
 import cs.pub.web.content.extractor.swing.listeners.CrawlListener;
 import cs.pub.web.content.extractor.swing.listeners.DomainsListener;
 import cs.pub.web.content.extractor.swing.listeners.QuitListener;
+import cs.pub.web.content.extractor.swing.listeners.RefreshListener;
 import cs.pub.web.content.extractor.swing.listeners.StorageListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 @Service
 public class ConfigurationWindow extends JFrame {
@@ -95,6 +97,9 @@ public class ConfigurationWindow extends JFrame {
 		pack();
 		storageField.setColumns(10);
 		
+		JButton refreshButton = new JButton("Refresh");
+		refreshButton.addActionListener(new RefreshListener(new File(runner.getCrawlStorageFolder()), scrollPane));
+		
 		GroupLayout gl = new GroupLayout(pane);
 		gl.setHorizontalGroup(
 			gl.createParallelGroup(Alignment.LEADING)
@@ -105,7 +110,10 @@ public class ConfigurationWindow extends JFrame {
 					.addGap(80)
 					.addComponent(btnNewButton)
 					.addGap(104)
-					.addComponent(btnQuit))
+					.addComponent(btnQuit)
+					.addGap(52)
+					.addComponent(refreshButton, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(1928, Short.MAX_VALUE))
 				.addGroup(gl.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl.createParallelGroup(Alignment.LEADING)
@@ -119,11 +127,11 @@ public class ConfigurationWindow extends JFrame {
 					.addGroup(gl.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl.createSequentialGroup()
 							.addComponent(storageLabel)
-							.addGap(374)
+							.addGap(662)
 							.addComponent(storageField, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl.createParallelGroup(Alignment.TRAILING)
-							.addComponent(domainsField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
-							.addComponent(maxDepthField, GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)))
+							.addComponent(domainsField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
+							.addComponent(maxDepthField, GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)))
 					.addGap(1107))
 		);
 		gl.setVerticalGroup(
@@ -141,10 +149,11 @@ public class ConfigurationWindow extends JFrame {
 					.addGroup(gl.createParallelGroup(Alignment.BASELINE)
 						.addComponent(storageLabel)
 						.addComponent(storageField, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 367, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 361, Short.MAX_VALUE)
 					.addGroup(gl.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnNewButton)
-						.addComponent(btnQuit))
+						.addComponent(btnQuit)
+						.addComponent(refreshButton))
 					.addGap(28)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
